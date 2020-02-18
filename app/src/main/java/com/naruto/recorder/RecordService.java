@@ -150,7 +150,7 @@ public class RecordService extends Service {
             }
 
             if (b) {
-                Toast.makeText(RecordService.this, "", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecordService.this, "保存成功", Toast.LENGTH_SHORT).show();
                 changeUI.changeUI(MainActivity.STATE_READY);
             }
         }
