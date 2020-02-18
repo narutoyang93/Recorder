@@ -13,15 +13,15 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.text.format.DateFormat;
-import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 
 import static android.os.Environment.DIRECTORY_DCIM;
 
@@ -121,13 +121,10 @@ public class RecordService extends Service {
                 changeUI.changeUI(MainActivity.STATE_RECORDING);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         public void pause() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mediaRecorder.pause();
-                changeUI.changeUI(MainActivity.STATE_PAUSE);
-            } else {
-                // TODO: 2020/2/13 0013 弹窗提示低版本系统无法暂停
-            }
+            mediaRecorder.pause();
+            changeUI.changeUI(MainActivity.STATE_PAUSE);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -146,14 +143,16 @@ public class RecordService extends Service {
             } catch (IllegalStateException e) {
                 e.printStackTrace();
                 b = false;
-                // TODO: 2020/2/13 0013 提示保存失败
+                changeUI.showDialog("保存异常");
                 mediaRecorder.reset();
                 mediaRecorder.release();
                 mediaRecorder = null;
             }
 
-            if (b)
+            if (b) {
+                Toast.makeText(RecordService.this, "", Toast.LENGTH_SHORT).show();
                 changeUI.changeUI(MainActivity.STATE_READY);
+            }
         }
     }
 
@@ -165,5 +164,7 @@ public class RecordService extends Service {
      */
     interface ChangeUI {
         void changeUI(int state);
+
+        void showDialog(String message);
     }
 }

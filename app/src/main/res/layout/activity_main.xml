@@ -9,10 +9,10 @@
 
     <Button
         android:id="@+id/btn_start"
-        android:onClick="start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
+        android:onClick="start"
         android:text="开始" />
 
     <LinearLayout
@@ -23,16 +23,17 @@
         android:visibility="gone">
 
         <Button
-            android:onClick="pauseOrResume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="pauseOrResume"
+            android:visibility="gone"
             tools:text="暂停" />
 
         <Button
-            android:onClick="complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
+            android:onClick="complete"
             android:text="完成" />
     </LinearLayout>
 </FrameLayout>

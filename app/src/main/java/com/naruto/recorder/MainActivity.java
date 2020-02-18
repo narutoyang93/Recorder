@@ -1,7 +1,9 @@
 package com.naruto.recorder;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         //开始按钮点击监听
         linearLayout = findViewById(R.id.ll_1);
         startBtn = findViewById(R.id.btn_start);
+        //搞版本才有暂停功能
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            linearLayout.getChildAt(0).setVisibility(View.VISIBLE);
         connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -47,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void changeUI(int state) {
                         changeState(state);
+                    }
+
+                    @Override
+                    public void showDialog(String message) {
+                        new AlertDialog.Builder(MainActivity.this).setMessage(message)
+                                .setPositiveButton("确定", null)
+                                .show();
                     }
                 });
                 binder.start();
@@ -115,8 +127,10 @@ public class MainActivity extends AppCompatActivity {
                 startBtn.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.GONE);
             } else {
-                Button button = (Button) linearLayout.getChildAt(0);
-                button.setText(newState == STATE_PAUSE ? "继续" : "暂停");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Button button = (Button) linearLayout.getChildAt(0);
+                    button.setText(newState == STATE_PAUSE ? "继续" : "暂停");
+                }
                 startBtn.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
             }
